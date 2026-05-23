@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import 'dotenv/config';
 import UsuarioService from '../services/usuarios.service.js';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 class AuthController {
     static async login(req, res, next) {
@@ -7,9 +11,11 @@ class AuthController {
             const dataLogin = req.body
             const usersDto = await UsuarioService.findAll();
 
-            const userLogin = usersDto.find(user => user.email === dataLogin.email && user.senha === dataLogin.senha)
+            const userLogin = usersDto.find(user => user.email === dataLogin.email)
 
-            if(!userLogin) {
+            const passValidate = await bcrypt.compare(dataLogin.senha, userLogin.senha)
+
+            if(!userLogin || !passValidate) {
                 return next(new Error("Credênciais inválidas"))
             }
 
@@ -19,7 +25,6 @@ class AuthController {
             }
 
             // Criando token
-            const JWT_SECRET = "secret_jwt"
             const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "1h"});
             
             return res.status(200).json({

@@ -1,5 +1,6 @@
 import UsuarioRepository from '../repositories/usuarios.repository.js';
 import { UsuarioDto } from '../dtos/usuarios.dto.js';
+import bcrypt from 'bcrypt';
 
 class UsuarioService {
 
@@ -19,6 +20,11 @@ class UsuarioService {
     }
 
     static async create(usuarioData) {
+        const saltRounds = 10;
+        const senhaHash = await bcrypt.hash(usuarioData.senha, saltRounds)
+
+        usuarioData.senha = senhaHash;
+
         const newUsuarioFromDb = await UsuarioRepository.create(usuarioData);
         return new UsuarioDto(newUsuarioFromDb);
     }

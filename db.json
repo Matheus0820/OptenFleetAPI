@@ -51,25 +51,11 @@
   ],
   "usuarios": [
     {
-      "id": "0e408a9c-b6d1-44b5-9c9a-f5878842f470",
-      "nome": "João Silva Atualizado",
-      "email": "joao.novo@email.com",
+      "id": "bf411103-5271-4756-8981-dc2822724432",
+      "nome": "Matheus Ramos",
+      "email": "mr7052954@gmail.com",
       "nivelAcesso": "Gestor",
-      "senha": "123456"
-    },
-    {
-      "id": "956ab61c-2c99-4d29-8567-c1d8f5812e9b",
-      "nome": "Maria Souza",
-      "email": "maria.souza@email.com",
-      "nivelAcesso": "Colaborador",
-      "senha": "abc1234"
-    },
-    {
-      "id": "aa188089-297f-491f-b87a-0e0a17ebab0d",
-      "nome": "João Moreira",
-      "email": "joao.moreira@email.com",
-      "nivelAcesso": "Colaborador",
-      "senha": "654321"
+      "senha": "$2b$10$MoyYCA3r19Xq4CTlj649vubFQw6N0mgPoiEi/A8oJXB4ggnbaQSWq"
     }
   ]
 }

@@ -8,7 +8,7 @@ import { authenticator } from '../middlewares/auth.middleware.js';
 const router = Router();
 
 router.get('/', authenticator, UsuarioController.findAll);
-router.post('/', authenticator, validatorUsuarios, verificarErros, UsuarioController.create);
+router.post('/', validatorUsuarios, verificarErros, UsuarioController.create);
 router.get('/:id', authenticator, UsuarioController.findById);
 router.put( '/:id', authenticator, validarAtualizacaoUsuario, verificarErros, UsuarioController.put);
 router.patch('/:id', authenticator, validarAtualizacaoUsuario, verificarErros, UsuarioController.patch);

@@ -83,6 +83,17 @@ class WebController {
             next(error);
         }
     }
+
+    static async createUserForms(req, res, next) {
+        try {
+            res.render('create_usuario', {
+                title: "Opt.en Fleet - Cadastrar usuário"
+            });
+
+        } catch(error) {
+            next(error)
+        }
+    }
 }
 
 export default WebController;
