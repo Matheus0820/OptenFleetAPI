@@ -1,0 +1,174 @@
+extends layouts/main.pug
+
+block content
+
+    style.
+        :root {
+            --primary-green: #27ae60;
+            --secondary-blue: #2980b9;
+            --dark-green: #1e8449;
+            --bg-white: #f9fbfd;
+            --text-dark: #2c3e50;
+            --white: #ffffff;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            border-top: 5px solid var(--primary-green);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .card-header h3 {
+            color: var(--secondary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group label i {
+            color: var(--primary-green);
+            margin-right: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #dfe6e9;
+            border-radius: 10px;
+            background-color: var(--bg-white);
+            font-size: 15px;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus {
+            border-color: var(--secondary-blue);
+            background-color: var(--white);
+            box-shadow: 0 0 0 4px rgba(41, 128, 185, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: #95a5a6;
+        }
+
+        .form-actions {
+            margin-top: 25px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(
+                135deg,
+                var(--primary-green) 0%,
+                var(--secondary-blue) 100%
+            );
+            color: var(--white);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login i {
+            margin-right: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(39, 174, 96, 0.25);
+            opacity: 0.95;
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .error-message {
+            background-color: #fdecea;
+            color: #c0392b;
+            border-left: 4px solid #e74c3c;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+    .login-container
+        .login-card
+
+            .card-header
+                h3
+                    i.fas.fa-user-circle
+                    span Acesso ao Sistema
+
+            .card-body
+
+                if erro
+                    .error-message
+                        p= erro
+
+                form(action="/api/login" method="POST")
+
+                    .form-group
+                        label(for="email")
+                            i.fas.fa-envelope
+                            |  E-mail
+
+                        input(
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="Digite seu e-mail"
+                            required
+                        )
+
+                    .form-group
+                        label(for="senha")
+                            i.fas.fa-lock
+                            |  Senha
+
+                        input(
+                            type="password"
+                            name="senha"
+                            id="senha"
+                            placeholder="Digite sua senha"
+                            required
+                        )
+
+                    .form-actions
+                        button.btn-login(type="submit")
+                            i.fas.fa-sign-in-alt
+                            |  Entrar

@@ -3,6 +3,7 @@ export class UsuarioDto {
         this.id = usuario.id;
         this.nome = usuario.nome;
         this.email = usuario.email;
+        this.senha = usuario.senha;
         this.nivelAcesso = usuario.nivelAcesso; // Colaborador, Gestor
     }
 }

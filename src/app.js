@@ -7,6 +7,7 @@ import routesFrota from './routes/frota.routes.js';
 import routesClientes from './routes/clientes.routes.js';
 import routesUsuario from './routes/usuarios.routes.js';
 import routesWeb from './routes/web.routes.js';
+import routesAuth from './routes/auth.routes.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,12 +16,14 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '../public')));
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use('/api/colaboradores', routesColaboradores);
 app.use('/api/frota', routesFrota);
 app.use('/api/clientes', routesClientes);
 app.use('/api/usuarios', routesUsuario);
+app.use('/api', routesAuth);
 
 app.use('/', routesWeb);
 

@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import ClienteService from '../services/clientes.service.js';
 import ColaboradorService from '../services/colaboradores.service.js';
 import FrotaService from '../services/frota.service.js';
@@ -68,6 +70,17 @@ class WebController {
         } catch(error) {
             next(error);
 
+        }
+    }
+
+    static async loginUser(req, res, next) {
+        try {
+            res.render('login', {
+                title: "Opt.en Fleet - Login"
+            });
+
+        } catch(error) {
+            next(error);
         }
     }
 }
