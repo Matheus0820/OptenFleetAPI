@@ -1,0 +1,40 @@
+extends layouts/main.pug
+
+block content
+    section.header-section
+        h1 Sistema de Gestão Operacional
+        p Acesse rapidamente todos os módulos do sistema.
+
+    .grid-container
+
+        .log-card
+            .card-header
+                h3
+                    i.fas.fa-users
+                    span Clientes
+            .card-body
+                a.btn-maps(href="/clientes") Acessar Clientes
+
+        .log-card
+            .card-header
+                h3
+                    i.fas.fa-user-hard-hat
+                    span Colaboradores
+            .card-body
+                a.btn-maps(href="/colaboradores") Acessar Colaboradores
+
+        .log-card
+            .card-header
+                h3
+                    i.fas.fa-truck
+                    span Frota
+            .card-body
+                a.btn-maps(href="/frota") Acessar Frota
+
+        .log-card
+            .card-header
+                h3
+                    i.fas.fa-user
+                    span Usuários
+            .card-body
+                a.btn-maps(href="/usuarios") Acessar Usuários

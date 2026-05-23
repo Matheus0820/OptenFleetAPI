@@ -1,0 +1,75 @@
+{
+  "colaboradores": [
+    {
+      "id": "ccb15683-d44d-4948-ad7f-a48537e4cf25",
+      "nome": "João",
+      "funcao": "Estagiário",
+      "horaInicioExpediente": 6,
+      "horaFimExpediente": 12,
+      "horasTrabalhoPorDia": 6
+    },
+    {
+      "id": "148c6648-0576-4f45-abb5-73cfd4813630",
+      "nome": "Maria",
+      "funcao": "Ajudante",
+      "horaInicioExpediente": 9,
+      "horaFimExpediente": 17,
+      "horasTrabalhoPorDia": 8
+    }
+  ],
+  "frota": [
+    {
+      "id": "e148a777-eba7-48e3-bd83-30c2010ae552",
+      "marca": "Volkswagen",
+      "anoFabricacao": 2021,
+      "placa": "ABC1D23",
+      "capacidadeMaximaTanque": 65,
+      "quilometroPorLitro": 13.5
+    },
+    {
+      "id": "de3fc571-eb27-4d52-9e40-b7bbba0c1305",
+      "marca": "Fiat",
+      "anoFabricacao": 2023,
+      "placa": "CDF2H34",
+      "capacidadeMaximaTanque": 80,
+      "quilometroPorLitro": 15
+    }
+  ],
+  "clientes": [
+    {
+      "id": "deb79176-727e-486a-951a-6552bf7df632",
+      "nome": "José Manuel",
+      "tipoServico": "Manutenção",
+      "urlMaps": "https://maps.app.goo.gl/U5qHXzbL9YicqC2dA"
+    },
+    {
+      "id": "d8778eb5-4109-453c-8929-4758d9579948",
+      "nome": "Maria",
+      "tipoServico": "Manutenção",
+      "urlMaps": "https://maps.app.goo.gl/U5qHXzbL9YicqC2dA"
+    }
+  ],
+  "usuarios": [
+    {
+      "id": "0e408a9c-b6d1-44b5-9c9a-f5878842f470",
+      "nome": "João Silva Atualizado",
+      "email": "joao.novo@email.com",
+      "nivelAcesso": "Gestor",
+      "senha": "123456"
+    },
+    {
+      "id": "956ab61c-2c99-4d29-8567-c1d8f5812e9b",
+      "nome": "Maria Souza",
+      "email": "maria.souza@email.com",
+      "nivelAcesso": "Colaborador",
+      "senha": "abc1234"
+    },
+    {
+      "id": "aa188089-297f-491f-b87a-0e0a17ebab0d",
+      "nome": "João Moreira",
+      "email": "joao.moreira@email.com",
+      "nivelAcesso": "Colaborador",
+      "senha": "654321"
+    }
+  ]
+}

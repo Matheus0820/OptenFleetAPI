@@ -1,0 +1,32 @@
+extends layouts/main.pug
+
+block content
+    section.header-section
+        h1 Painel de Operações: Usuários
+        p Listagem atualizada dos usuários do sistema.
+
+    if usuarios.length > 0
+        .grid-container
+            each usuario in usuarios
+                div.log-card
+                    .card-header
+                        h3
+                            i.fas.fa-user
+                            span= usuario.nome
+
+                    .card-body
+                        p
+                            strong 
+                                i.fas.fa-envelope
+                                |  E-mail: 
+                            span= usuario.email
+
+                        p
+                            strong 
+                                i.fas.fa-user-shield
+                                |  Nível de acesso: 
+                            span= usuario.nivelAcesso
+
+    else
+        .empty-state
+            p Nenhum usuário cadastrado no sistema no momento.

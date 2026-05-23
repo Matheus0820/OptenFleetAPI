@@ -1,0 +1,44 @@
+extends layouts/main.pug
+
+block content
+    section.header-section
+        h1 Painel de Operações: Frota
+        p Listagem atualizada dos veículos da operação.
+
+    if frota.length > 0
+        .grid-container
+            each veiculo in frota
+                div.log-card
+                    .card-header
+                        h3
+                            i.fas.fa-truck
+                            span= veiculo.marca + ' - ' + veiculo.placa
+
+                    .card-body
+                        p
+                            strong 
+                                i.fas.fa-calendar-alt
+                                |  Ano de fabricação: 
+                            span= veiculo.anoFabricacao
+
+                        p
+                            strong 
+                                i.fas.fa-gas-pump
+                                |  Capacidade do tanque: 
+                            span= veiculo.capacidadeMaximaTanque + ' L'
+
+                        p
+                            strong 
+                                i.fas.fa-road
+                                |  Km por litro: 
+                            span= veiculo.quilometroPorLitro + ' km/L'
+
+                        p
+                            strong 
+                                i.fas.fa-car
+                                |  Placa: 
+                            span= veiculo.placa
+
+    else
+        .empty-state
+            p Nenhum veículo cadastrado na frota no momento.

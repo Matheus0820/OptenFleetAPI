@@ -1,0 +1,29 @@
+extends layouts/main.pug
+
+block content
+    section.header-section
+        h1 Painel de Operações: Clientes
+        p Listagem atualizada de pontos de entrega e serviços.
+
+    if clientes.length > 0
+        .grid-container
+            each cliente in clientes
+                div.log-card
+                    .card-header
+                        h3
+                            i.fas.fa-warehouse
+                            span= cliente.nome
+                    .card-body
+                        p
+                            strong 
+                                i.fas.fa-truck-loading
+                                |  Modalidade: 
+                            span= cliente.tipoServico
+                        p
+                            strong 
+                                i.fas.fa-map-marker-alt
+                                |  Localização: 
+                            a(href=cliente.urlMaps, target="_blank").btn-maps Rastrear no Mapa
+    else
+        .empty-state
+            p Nenhum Cliente cadastrado no sistema no momento.

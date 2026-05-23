@@ -1,0 +1,43 @@
+extends layouts/main.pug
+
+block content
+    section.header-section
+        h1 Painel de Operações: Colaboradores
+        p Listagem atualizada da equipe operacional.
+
+    if colaboradores.length > 0
+        .grid-container
+            each colaborador in colaboradores
+                div.log-card
+                    .card-header
+                        h3
+                            i.fas.fa-user-hard-hat
+                            span= colaborador.nome
+                    .card-body
+                        p
+                            strong 
+                                i.fas.fa-briefcase
+                                |  Função: 
+                            span= colaborador.funcao
+
+                        p
+                            strong 
+                                i.fas.fa-clock
+                                |  Início do expediente: 
+                            span= colaborador.horaInicioExpediente
+
+                        p
+                            strong 
+                                i.fas.fa-clock
+                                |  Fim do expediente: 
+                            span= colaborador.horaFimExpediente
+
+                        p
+                            strong 
+                                i.fas.fa-business-time
+                                |  Horas por dia: 
+                            span= colaborador.horasTrabalhoPorDia
+
+    else
+        .empty-state
+            p Nenhum Colaborador cadastrado no sistema no momento.
