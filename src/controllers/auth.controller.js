@@ -16,12 +16,13 @@ class AuthController {
             const passValidate = await bcrypt.compare(dataLogin.senha, userLogin.senha)
 
             if(!userLogin || !passValidate) {
-                return next(new Error("Credênciais inválidas"))
+                return res.status(400).json({message: "Credênciais Inválidas"})
             }
 
             const payload = {
                 id: userLogin.id,
-                login: userLogin.email
+                login: userLogin.email,
+                nivelAcesso: userLogin.nivelAcesso
             }
 
             // Criando token

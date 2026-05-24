@@ -56,6 +56,13 @@
       "email": "mr7052954@gmail.com",
       "nivelAcesso": "Gestor",
       "senha": "$2b$10$MoyYCA3r19Xq4CTlj649vubFQw6N0mgPoiEi/A8oJXB4ggnbaQSWq"
+    },
+    {
+      "id": "526d3c72-f396-404b-bd0d-ff46f1b20bc1",
+      "nome": "Matheus Ramos",
+      "email": "matheus.ramos.703@ufrn.edu.br",
+      "nivelAcesso": "Colaborador",
+      "senha": "$2b$10$hYDMgMw1qZThUbCuX2lFLecRr5EgxdAuWGf29.3k9XGNvJI3CnBFG"
     }
   ]
 }
