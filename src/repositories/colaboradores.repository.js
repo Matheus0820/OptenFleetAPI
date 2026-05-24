@@ -24,7 +24,7 @@ class ColaboradorRepository {
 
         const newColaborador = {
             id: uuidv4(),
-            nome: colaboradorData.nome,
+            user_id: colaboradorData.user_id,
             funcao: colaboradorData.funcao, // Pode ser Ajudante, Técnico, Engenheiro, Estagiário
             horaInicioExpediente: colaboradorData.horaInicioExpediente,
             horaFimExpediente: colaboradorData.horaFimExpediente,
@@ -45,7 +45,6 @@ class ColaboradorRepository {
         );
 
         // Fazendo o update
-        colaborador.nome = colaboradorData.nome;
         colaborador.funcao = colaboradorData.funcao;
         colaborador.horaInicioExpediente = colaboradorData.horaInicioExpediente;
         colaborador.horaFimExpediente = colaboradorData.horaFimExpediente;

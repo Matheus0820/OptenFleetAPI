@@ -1,22 +1,5 @@
 {
-  "colaboradores": [
-    {
-      "id": "ccb15683-d44d-4948-ad7f-a48537e4cf25",
-      "nome": "João",
-      "funcao": "Estagiário",
-      "horaInicioExpediente": 6,
-      "horaFimExpediente": 12,
-      "horasTrabalhoPorDia": 6
-    },
-    {
-      "id": "148c6648-0576-4f45-abb5-73cfd4813630",
-      "nome": "Maria",
-      "funcao": "Ajudante",
-      "horaInicioExpediente": 9,
-      "horaFimExpediente": 17,
-      "horasTrabalhoPorDia": 8
-    }
-  ],
+  "colaboradores": [],
   "frota": [
     {
       "id": "e148a777-eba7-48e3-bd83-30c2010ae552",
@@ -63,6 +46,13 @@
       "email": "matheus.ramos.703@ufrn.edu.br",
       "nivelAcesso": "Colaborador",
       "senha": "$2b$10$hYDMgMw1qZThUbCuX2lFLecRr5EgxdAuWGf29.3k9XGNvJI3CnBFG"
+    },
+    {
+      "id": "b5c9932e-a268-43fd-bebf-a3dd3e6f42a5",
+      "nome": "Maria",
+      "email": "maria@gmail.com",
+      "nivelAcesso": "Gestor",
+      "senha": "$2b$10$csRadLBXdionKo0cRZ7tXuHf8H/vWtbecwJqbgHf3s8K9IsjI023S"
     }
   ]
 }

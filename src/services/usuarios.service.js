@@ -1,4 +1,5 @@
 import UsuarioRepository from '../repositories/usuarios.repository.js';
+import ColaboradorRepository from '../repositories/colaboradores.repository.js';
 import { UsuarioDto } from '../dtos/usuarios.dto.js';
 import bcrypt from 'bcrypt';
 
@@ -13,7 +14,10 @@ class UsuarioService {
         const usuario = await UsuarioRepository.findById(id);
 
         if (!usuario) {
-            return new Error('Usuário com ID informado não existe.');
+            throw Object.assign(
+                new Error('Usuário com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         return new UsuarioDto(usuario);
@@ -33,7 +37,10 @@ class UsuarioService {
         const usuarioSalvo = await UsuarioRepository.findById(id);
 
         if (!usuarioSalvo) {
-            return new Error('Usuário com ID informado não existe.');
+            throw Object.assign(
+                new Error('Usuário com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const usuarioUpdateDb = await UsuarioRepository.update({
@@ -49,7 +56,10 @@ class UsuarioService {
         const usuarioSalvo = await UsuarioRepository.findById(id);
 
         if (!usuarioSalvo) {
-            return new Error('Usuário com ID informado não existe.');
+            throw Object.assign(
+                new Error('Usuário com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const dadosAtualizados = {
@@ -67,7 +77,20 @@ class UsuarioService {
         const usuarioSalvo = await UsuarioRepository.findById(id);
 
         if (!usuarioSalvo) {
-            return new Error('Usuário com ID informado não existe.');
+            throw Object.assign(
+                new Error('Usuário com ID informado não existe.'),
+                { statusCode: 404 }
+            );
+        }
+
+        // Verificar se o usuário tem acesso de colaborador e se é cadastrado como colaborador
+        if(usuarioSalvo.nivelAcesso == 'Colaborador') {
+            const getColaboradores = await ColaboradorRepository.findAll();
+            const hasColaborador = getColaboradores.find(colaborador => colaborador.user_id === usuarioSalvo.id);
+
+            if(hasColaborador) {
+                ColaboradorRepository.delete(hasColaborador.id);
+            }
         }
 
         const usuarioRemovido = await UsuarioRepository.delete(id);

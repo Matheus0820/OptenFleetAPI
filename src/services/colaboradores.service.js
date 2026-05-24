@@ -1,4 +1,5 @@
 import ColaboradorRepository from '../repositories/colaboradores.repository.js';
+import UsuarioRepository from '../repositories/usuarios.repository.js';
 import { ColaboradorDto } from '../dtos/colaboradores.dto.js';
 
 class ColaboradorService {
@@ -15,7 +16,10 @@ class ColaboradorService {
         const colaborador = await ColaboradorRepository.findById(id);
 
         if (!colaborador) {
-            return new Error('Colaborador com ID informado não existe.');
+            throw Object.assign(
+                new Error('Colaborador com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         return new ColaboradorDto(colaborador);
@@ -46,14 +50,51 @@ class ColaboradorService {
 
     static async create(colaboradorData) {
         const calculado = this.calcularDados(colaboradorData);
+        const user_id = colaboradorData.user_id;
+
+        // Veficando se usuário existe
+        const hasUser = await UsuarioRepository.findById(user_id);
+
+
+        if(!hasUser) {
+            throw Object.assign(
+                new Error("Usuário informado não existe."),
+                { statusCode: 404 }
+            );
+            
+        }
+
+        // Verificando se o nível de acesso desse usuário é de Colaborador
+        if(hasUser.nivelAcesso != 'Colaborador') {
+            throw Object.assign(
+                new Error("Usuário informado não possui papel de Colaborador."),
+                {statusCode: 403}
+            );
+            
+        }
+
+        // Verificando se já existe um colaborador para o usuário informado
+        const getColaboradores = await ColaboradorRepository.findAll();
+        const hasColaborador = getColaboradores.find(colaborador => colaborador.user_id === user_id);
+
+        if(hasColaborador) {
+            throw Object.assign(
+                new Error("Usuário informado já está cadastrado como colaborador."),
+                { statusCode: 409 }
+            );
+            
+        }
 
         const newColaboradorData = {
-            nome: colaboradorData.nome,
+            user_id: colaboradorData.user_id,
             funcao: colaboradorData.funcao,
             horaInicioExpediente: colaboradorData.horaInicioExpediente,
             horaFimExpediente: calculado.horaFimExpediente,
             horasTrabalhoPorDia: calculado.horasTrabalhoPorDia
         };
+
+        console.log("Service - Colaborador");
+        console.log(newColaboradorData);
 
         const newColaboradorFromDb =
             await ColaboradorRepository.create(newColaboradorData);
@@ -65,13 +106,15 @@ class ColaboradorService {
         const colaboradorSalvo = await ColaboradorRepository.findById(id);
 
         if (!colaboradorSalvo) {
-            return new Error('Colaborador com ID informado não existe.');
+            throw Object.assign(
+                new Error('Colaborador com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const calculado = this.calcularDados(colaboradorData);
 
         const updateData = {
-            nome: colaboradorData.nome,
             funcao: colaboradorData.funcao,
             horaInicioExpediente: colaboradorData.horaInicioExpediente,
             horaFimExpediente: calculado.horaFimExpediente,
@@ -88,11 +131,13 @@ class ColaboradorService {
         const colaboradorSalvo = await ColaboradorRepository.findById(id);
 
         if (!colaboradorSalvo) {
-            return new Error('Colaborador com ID informado não existe.');
+            throw Object.assign(
+                new Error('Colaborador com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const mergedData = {
-            nome: colaboradorData.nome ?? colaboradorSalvo.nome,
             funcao: colaboradorData.funcao ?? colaboradorSalvo.funcao,
             horaInicioExpediente:
                 colaboradorData.horaInicioExpediente ??
@@ -102,7 +147,6 @@ class ColaboradorService {
         const calculado = this.calcularDados(mergedData);
 
         const updateData = {
-            nome: mergedData.nome,
             funcao: mergedData.funcao,
             horaInicioExpediente: mergedData.horaInicioExpediente,
             horaFimExpediente: calculado.horaFimExpediente,
@@ -119,7 +163,10 @@ class ColaboradorService {
         const colaboradorDelete = await ColaboradorRepository.findById(id);
 
         if (!colaboradorDelete) {
-            return new Error('Colaborador com ID informado não existe.');
+            throw Object.assign(
+                new Error('Colaborador com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         await ColaboradorRepository.delete(id);

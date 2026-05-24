@@ -13,7 +13,10 @@ class FrotaService {
         const frota = await FrotaRepository.findById(id);
 
         if (!frota) {
-            return new Error('Veículo com ID informado não existe.');
+            throw Object.assign(
+                new Error('Veículo com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         return new FrotaDto(frota);
@@ -29,7 +32,10 @@ class FrotaService {
         const frotaSalva = await FrotaRepository.findById(id);
 
         if (!frotaSalva) {
-            return new Error('Veículo com ID informado não existe.');
+            throw Object.assign(
+                new Error('Veículo com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const newVeiculo = {
@@ -49,7 +55,10 @@ class FrotaService {
         const frotaSalva = await FrotaRepository.findById(id);
 
         if (!frotaSalva) {
-            return new Error('Veículo com ID informado não existe.');
+            throw Object.assign(
+                new Error('Veículo com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const dadosAtualizados = {
@@ -69,7 +78,10 @@ class FrotaService {
         const frotaSalva = await FrotaRepository.findById(id);
 
         if (!frotaSalva) {
-            return new Error('Veículo com ID informado não existe.');
+            throw Object.assign(
+                new Error('Veículo com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         await FrotaRepository.delete(id);

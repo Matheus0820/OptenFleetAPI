@@ -14,7 +14,10 @@ class ClienteService {
         const cliente = await ClienteRepository.findById(id);
 
         if(!cliente) {
-            return new Error('Cliente com ID informado não existe.');
+            throw Object.assign(
+                new Error('Cliente com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         return new ClienteDto(cliente);
@@ -30,7 +33,10 @@ class ClienteService {
         const clienteSalvo = await ClienteRepository.findById(id);
 
         if(!clienteSalvo) {
-            return new Error('Cliente com ID informado não existe.');
+            throw Object.assign(
+                new Error('Cliente com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         const clienteUpdateDb = await ClienteRepository.update(clienteData, id);
@@ -43,7 +49,10 @@ class ClienteService {
         const clienteSalvo = await ClienteRepository.findById(id);
 
         if(!clienteSalvo) {
-            return new Error('Cliente com ID informado não existe.');
+            throw Object.assign(
+                new Error('Cliente com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         // Fazendo o update
@@ -56,7 +65,10 @@ class ClienteService {
         const clienteDelete = await ClienteRepository.findById(id);
 
         if(!clienteDelete) {
-            return new Error('Cliente com ID informado não existe.')
+            throw Object.assign(
+                new Error('Cliente com ID informado não existe.'),
+                { statusCode: 404 }
+            );
         }
 
         // Removendo cliente

@@ -2,12 +2,14 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import { globalErrorHandler } from './middlewares/error.middleware.js';
+ 
 import routesColaboradores from './routes/colaboradores.routes.js';
 import routesFrota from './routes/frota.routes.js';
 import routesClientes from './routes/clientes.routes.js';
 import routesUsuario from './routes/usuarios.routes.js';
 import routesWeb from './routes/web.routes.js';
-import routesAuth from './routes/auth.routes.js'
+import routesAuth from './routes/auth.routes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,5 +31,7 @@ app.use('/', routesWeb);
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(globalErrorHandler);
 
 export default app;
