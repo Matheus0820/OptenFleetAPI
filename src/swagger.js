@@ -8,6 +8,7 @@ const options = {
             version: '1.2.0',
             description: 'API de gerenciamento de Rotas de instalação e manutenção'
         },
+
         tags: [
             {
                 name: 'Autenticação',
@@ -29,11 +30,16 @@ const options = {
                 name: 'Usuários',
                 description: 'Operações relacionadas aos usuários'
             },
-            {
-                name: 'WEB viewer',
-                description: 'Operações relacionadas a visualização WEB com PUG'
-            }
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT"
+                }
+            }
+        }
     },
 
     apis: ['./src/routes/*.js'],

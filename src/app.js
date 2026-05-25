@@ -1,8 +1,10 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import swaggerUi from 'swagger-ui-express';
 
 import { globalErrorHandler } from './middlewares/error.middleware.js';
+import swaggerSpec from './swagger.js';
  
 import routesColaboradores from './routes/colaboradores.routes.js';
 import routesFrota from './routes/frota.routes.js';
@@ -20,6 +22,9 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api/colaboradores', routesColaboradores);
 app.use('/api/frota', routesFrota);

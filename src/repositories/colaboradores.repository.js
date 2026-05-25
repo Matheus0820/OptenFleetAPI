@@ -19,7 +19,7 @@ class ColaboradorRepository {
     }
 
     static async create(colaboradorData) {
-        global.crypto = crypto;
+        global._crypto = crypto;
         db.read();
 
         const newColaborador = {

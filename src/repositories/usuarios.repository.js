@@ -15,7 +15,7 @@ class UsuarioRepository {
     }
 
     static async create(usuarioData) {
-        global.crypto = crypto;
+        global._crypto = crypto;
         db.read();
 
         const newUsuario = {

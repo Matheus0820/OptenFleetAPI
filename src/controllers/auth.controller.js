@@ -13,10 +13,20 @@ class AuthController {
 
             const userLogin = usersDto.find(user => user.email === dataLogin.email)
 
-            const passValidate = await bcrypt.compare(dataLogin.senha, userLogin.senha)
+            if(!userLogin) {
+                throw Object.assign(
+                    new Error('Credênciais Inválidas'),
+                    { statusCode: 401 }
+                );
+            }
 
-            if(!userLogin || !passValidate) {
-                return res.status(400).json({message: "Credênciais Inválidas"})
+            const passValidate = await bcrypt.compare(dataLogin.senha, userLogin.senha);
+
+            if(!passValidate) {
+                throw Object.assign(
+                    new Error('Credênciais Inválidas'),
+                    { statusCode: 401 }
+                );
             }
 
             const payload = {

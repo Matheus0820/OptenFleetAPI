@@ -1,5 +1,14 @@
 {
-  "colaboradores": [],
+  "colaboradores": [
+    {
+      "id": "7af9cac0-deb8-4ece-b579-b54c138e4222",
+      "user_id": "ce0609b9-a489-437a-9069-691f56b9b7f9",
+      "funcao": "Ajudante",
+      "horaInicioExpediente": 9,
+      "horaFimExpediente": 17,
+      "horasTrabalhoPorDia": 8
+    }
+  ],
   "frota": [
     {
       "id": "e148a777-eba7-48e3-bd83-30c2010ae552",
@@ -48,11 +57,11 @@
       "senha": "$2b$10$hYDMgMw1qZThUbCuX2lFLecRr5EgxdAuWGf29.3k9XGNvJI3CnBFG"
     },
     {
-      "id": "b5c9932e-a268-43fd-bebf-a3dd3e6f42a5",
+      "id": "ce0609b9-a489-437a-9069-691f56b9b7f9",
       "nome": "Maria",
       "email": "maria@gmail.com",
-      "nivelAcesso": "Gestor",
-      "senha": "$2b$10$csRadLBXdionKo0cRZ7tXuHf8H/vWtbecwJqbgHf3s8K9IsjI023S"
+      "nivelAcesso": "Colaborador",
+      "senha": "$2b$10$juixSEZuAOnyNOJojkd1QuUlZg.hZdzt21.BducJilqGibjBX.ULG"
     }
   ]
 }

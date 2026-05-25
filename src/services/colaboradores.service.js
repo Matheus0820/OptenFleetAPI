@@ -93,9 +93,6 @@ class ColaboradorService {
             horasTrabalhoPorDia: calculado.horasTrabalhoPorDia
         };
 
-        console.log("Service - Colaborador");
-        console.log(newColaboradorData);
-
         const newColaboradorFromDb =
             await ColaboradorRepository.create(newColaboradorData);
 
