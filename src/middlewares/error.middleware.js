@@ -5,7 +5,7 @@ export const globalErrorHandler = (error, req, res, next) => {
     const statusCode = error.statusCode || 500;
     res.status(statusCode).json({
         status: 'error',
-        statusCode: 'statusCode',
+        statusCode: statusCode,
         message: error.statusCode ? error.message: 'Ocorreu um erro interno no servidor.'
     });
 }
