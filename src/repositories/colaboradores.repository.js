@@ -1,71 +1,31 @@
-import db from '../config/database.js';
+import Colaborador from '../models/colaboradores.model.js';
 import crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
 
 class ColaboradorRepository {
     static async findAll() {
-        db.read();
-
-        const allColaboradores = db.data.colaboradores;
-        return allColaboradores;
+        const colaboradores = await Colaborador.find();
+        return colaboradores;
     }
 
     static async findById(id) {
-        db.read();
-
-        const colaborador = await db.data.colaboradores.find(colaborador => colaborador.id === id);
-
+        const colaborador = await Colaborador.findById(id);
         return colaborador;
     }
 
     static async create(colaboradorData) {
-        global._crypto = crypto;
-        db.read();
-
-        const newColaborador = {
-            id: uuidv4(),
-            user_id: colaboradorData.user_id,
-            funcao: colaboradorData.funcao, // Pode ser Ajudante, Técnico, Engenheiro, Estagiário
-            horaInicioExpediente: colaboradorData.horaInicioExpediente,
-            horaFimExpediente: colaboradorData.horaFimExpediente,
-            horasTrabalhoPorDia: colaboradorData.horasTrabalhoPorDia
-        };
-
-        db.data.colaboradores.push(newColaborador);
-        await db.write();
-
+        const newColaborador = new Colaborador(colaboradorData);
+        await newColaborador.save();
         return newColaborador;
     }
 
     static async update(colaboradorData, id) {
-        db.read();
-
-        const colaborador = await db.data.colaboradores.find(
-            colaborador => colaborador.id === id
-        );
-
-        // Fazendo o update
-        colaborador.funcao = colaboradorData.funcao;
-        colaborador.horaInicioExpediente = colaboradorData.horaInicioExpediente;
-        colaborador.horaFimExpediente = colaboradorData.horaFimExpediente;
-        colaborador.horasTrabalhoPorDia = colaboradorData.horasTrabalhoPorDia;
-
-        // Salvando no banco e retornando colaborador salvo
-        await db.write();
-
+        const colaborador = await Colaborador.findByIdAndUpdate(id, colaboradorData, { new: true });
         return colaborador;
     }
 
     static async delete(id) {
-        db.read();
-
-        const indexColaborador = await db.data.colaboradores.findIndex(
-            colaborador => colaborador.id === id
-        );
-
-        db.data.colaboradores.splice(indexColaborador, 1);
-
-        await db.write();
+        const colaborador = await Colaborador.findByIdAndDelete(id);
+        return colaborador;
     }
 }
 

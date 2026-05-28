@@ -1,15 +1,19 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
+import mongoose from 'mongoose';
+import 'dotenv/config';
 
-const defaultData = {
-    colaboradores: [],
-    frota: [],
-    clientes: [],
-    usuarios: []
+const url = process.env.MONGODB_URL;
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(url, {
+            dbName: 'optenfleet',
+        });
+        console.log('MongoDB conectado com sucesso!');
+
+    } catch (error) {
+        console.error('Erro ao conectar ao MongoDB:', error);
+        process.exit(1);
+    }
 }
 
-const adapter = new JSONFile('db.json');
-const db = new Low(adapter, defaultData);
-await db.read();
-
-export default db;
+export default connectDB;

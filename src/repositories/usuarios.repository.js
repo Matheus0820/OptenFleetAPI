@@ -1,62 +1,32 @@
-import db from '../config/database.js';
+import Usuario from '../models/usuarios.model.js';
 import crypto from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
 
 class UsuarioRepository {
 
     static async findAll() {
-        db.read();
-        return db.data.usuarios;
+        const usuarios = await Usuario.find();
+        return usuarios;
     }
 
     static async findById(id) {
-        db.read();
-        return db.data.usuarios.find(u => u.id === id);
+        const usuario = await Usuario.findById(id);
+        return usuario;
     }
 
     static async create(usuarioData) {
-        global._crypto = crypto;
-        db.read();
-
-        const newUsuario = {
-            id: uuidv4(),
-            nome: usuarioData.nome,
-            email: usuarioData.email,
-            nivelAcesso: usuarioData.nivelAcesso,
-            senha: usuarioData.senha
-        };
-
-        db.data.usuarios.push(newUsuario);
-        await db.write();
-
+        const newUsuario = new Usuario(usuarioData);
+        await newUsuario.save();
         return newUsuario;
     }
 
     static async update(usuarioData, id) {
-        db.read();
-
-        const usuario = db.data.usuarios.find(u => u.id === id);
-
-        usuario.nome = usuarioData.nome;
-        usuario.email = usuarioData.email;
-        usuario.nivelAcesso = usuarioData.nivelAcesso;
-
-        await db.write();
-
+        const usuario = await Usuario.findByIdAndUpdate(id, usuarioData, { new: true });
         return usuario;
     }
 
     static async delete(id) {
-        db.read();
-
-        const indexUsuario = db.data.usuarios.findIndex(u => u.id === id);
-
-        const usuarioRemovido = db.data.usuarios[indexUsuario];
-
-        db.data.usuarios.splice(indexUsuario, 1);
-        await db.write();
-
-        return usuarioRemovido;
+        const usuario = await Usuario.findByIdAndDelete(id);
+        return usuario;
     }
 }
 
