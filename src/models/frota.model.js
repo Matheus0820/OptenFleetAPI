@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const frotaSchema = new mongoose.Schema({
-    marcar: {
+    marca: {
         type: String,
         required: [true, 'A marca é obrigatória.']
     },

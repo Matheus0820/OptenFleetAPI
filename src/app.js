@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import swaggerUi from 'swagger-ui-express';
 
 import { globalErrorHandler } from './middlewares/error.middleware.js';
-import swaggerSpec from './swagger.js';
+import swaggerSpec from './config/swagger.js'
  
 import routesColaboradores from './routes/colaboradores.routes.js';
 import routesFrota from './routes/frota.routes.js';
