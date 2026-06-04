@@ -23,7 +23,7 @@ const colaboradorSchema = new mongoose.Schema({
         min: [0, 'A hora de fim do expediente deve ser um número positivo.'],
         max: [24, 'A hora de fim do expediente deve ser menor ou igual a 24.'],
     },
-    horaTrabalhoPorDia: {
+    horasTrabalhoPorDia: {
         type: Number,
         required: [true, 'A hora de trabalho por dia é obrigatória.'],
         min: [0, 'A hora de trabalho por dia deve ser um número positivo.'],

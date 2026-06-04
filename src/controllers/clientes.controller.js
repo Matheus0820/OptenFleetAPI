@@ -66,7 +66,7 @@ class ClienteController {
 
     static async delete(req, res, next) {
         try {
-            const id = req.params;
+            const id = req.params.id;
             const deleteClienteDto = await ClienteService.delete(id);
 
             res.status(200).json(deleteClienteDto);
