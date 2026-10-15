@@ -1,0 +1,13 @@
+node_modules
+web/node_modules
+web/dist
+web/.angular
+public/*
+!public/.gitkeep
+.git
+.env
+.env.*
+!.env.example
+tests
+scripts
+*.md

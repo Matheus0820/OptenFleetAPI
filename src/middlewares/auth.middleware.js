@@ -1,27 +1,31 @@
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
+import { env } from '../config/env.js';
 
-const JWT_SECRET = process.env.JWT_SECRET
+const lerToken = (req) => {
+    const [esquema, token] = (req.headers.authorization || '').split(' ');
+    return esquema === 'Bearer' && token ? token : null;
+};
+
 export const authenticator = (req, res, next) => {
-    const authHeader = req.headers.authorization;
-
-    if(!authHeader) {
-        return res.status(401).json({message: "Token não informado"});
+    if (!req.headers.authorization) {
+        return res.status(401).json({ message: 'Token não informado' });
     }
 
-    const token = authHeader.split(" ")[1];
-
-    if(!token) {
-        return res.status(401).json({message: "Token Inválido"});
+    const token = lerToken(req);
+    if (!token) {
+        return res.status(401).json({ message: 'Token inválido' });
     }
 
     try {
-        const payload = jwt.verify(token, JWT_SECRET);
-
-        req.usuario = payload;
+        req.usuario = jwt.verify(token, env.jwtSecret);
         next();
-        
-    } catch(error) {
-        return res.status(401).json({message: "Token inválido ou expirado"});
+    } catch {
+        return res.status(401).json({ message: 'Token inválido ou expirado' });
     }
-}
+};
+
+// Identifica o usuário quando há token, mas não exige (ex.: cadastro público).
+export const optionalAuthenticator = (req, res, next) => {
+    if (!req.headers.authorization) return next();
+    return authenticator(req, res, next);
+};

@@ -137,3 +137,12 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Opt.en: build do Angular copiado para a API e artefatos do front
+public/*
+!public/.gitkeep
+web/node_modules
+web/dist
+web/.angular
+.venv
+__pycache__/

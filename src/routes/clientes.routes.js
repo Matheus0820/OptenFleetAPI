@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ClienteController from '../controllers/clientes.controller.js';
-import validatorClientes from '../validators/clientes.validator.js';
+import validatorClientes, { regrasValidacaoClientePatch } from '../validators/clientes.validator.js';
 import verificarErros from '../middlewares/validator.middleware.js';
 import { authenticator } from '../middlewares/auth.middleware.js';
 import { authorization } from '../middlewares/authorization.middleware.js';
@@ -32,10 +32,37 @@ const router = Router();
  *           type: string
  *           description: "Tipo de serviço solicitado pelo cliente (ex: Manutenção, Instalação)"
  *           example: "Manutenção"
+ *         latitude:
+ *           type: number
+ *           description: Extraída da urlMaps; informe junto com longitude se o link for curto
+ *           example: -5.8415
+ *         longitude:
+ *           type: number
+ *           example: -35.2010
+ *         demanda:
+ *           type: integer
+ *           description: Itens/pessoas consumidos da capacidade do veículo (padrão 1)
+ *           example: 1
+ *         prazoDias:
+ *           type: integer
+ *           nullable: true
+ *           description: Atender até o N-ésimo dia útil do horizonte (opcional)
+ *         tempoServicoMin:
+ *           type: integer
+ *           description: Duração do atendimento em minutos (padrão 120 Instalação, 60 Manutenção)
+ *           example: 120
+ *         janelaInicio:
+ *           type: integer
+ *           description: Início da janela de atendimento, em horas (padrão 8)
+ *           example: 8
+ *         janelaFim:
+ *           type: integer
+ *           description: Fim da janela de atendimento, em horas (padrão 17)
+ *           example: 17
  *         urlMaps:
  *           type: string
  *           description: "Link do Google Maps referente à localização do cliente"
- *           example: "https://maps.app.goo.gl/U5qHXzbL9YicqC2dA"
+ *           example: "https://www.google.com/maps/place/Cliente/@-5.8415,-35.2010,17z"
  *
  *     ClienteCreate:
  *       type: object
@@ -53,10 +80,37 @@ const router = Router();
  *           type: string
  *           description: "Tipo de serviço solicitado pelo cliente (ex: Manutenção, Instalação)"
  *           example: "Manutenção"
+ *         latitude:
+ *           type: number
+ *           description: Extraída da urlMaps; informe junto com longitude se o link for curto
+ *           example: -5.8415
+ *         longitude:
+ *           type: number
+ *           example: -35.2010
+ *         demanda:
+ *           type: integer
+ *           description: Itens/pessoas consumidos da capacidade do veículo (padrão 1)
+ *           example: 1
+ *         prazoDias:
+ *           type: integer
+ *           nullable: true
+ *           description: Atender até o N-ésimo dia útil do horizonte (opcional)
+ *         tempoServicoMin:
+ *           type: integer
+ *           description: Duração do atendimento em minutos (padrão 120 Instalação, 60 Manutenção)
+ *           example: 120
+ *         janelaInicio:
+ *           type: integer
+ *           description: Início da janela de atendimento, em horas (padrão 8)
+ *           example: 8
+ *         janelaFim:
+ *           type: integer
+ *           description: Fim da janela de atendimento, em horas (padrão 17)
+ *           example: 17
  *         urlMaps:
  *           type: string
  *           description: "Link do Google Maps referente à localização do cliente"
- *           example: "https://maps.app.goo.gl/U5qHXzbL9YicqC2dA"
+ *           example: "https://www.google.com/maps/place/Cliente/@-5.8415,-35.2010,17z"
  *
  *     ClienteUpdate:
  *       type: object
@@ -68,6 +122,33 @@ const router = Router();
  *         tipoServico:
  *           type: string
  *           description: "Tipo de serviço solicitado pelo cliente"
+ *         latitude:
+ *           type: number
+ *           description: Extraída da urlMaps; informe junto com longitude se o link for curto
+ *           example: -5.8415
+ *         longitude:
+ *           type: number
+ *           example: -35.2010
+ *         demanda:
+ *           type: integer
+ *           description: Itens/pessoas consumidos da capacidade do veículo (padrão 1)
+ *           example: 1
+ *         prazoDias:
+ *           type: integer
+ *           nullable: true
+ *           description: Atender até o N-ésimo dia útil do horizonte (opcional)
+ *         tempoServicoMin:
+ *           type: integer
+ *           description: Duração do atendimento em minutos (padrão 120 Instalação, 60 Manutenção)
+ *           example: 120
+ *         janelaInicio:
+ *           type: integer
+ *           description: Início da janela de atendimento, em horas (padrão 8)
+ *           example: 8
+ *         janelaFim:
+ *           type: integer
+ *           description: Fim da janela de atendimento, em horas (padrão 17)
+ *           example: 17
  *         urlMaps:
  *           type: string
  *           description: "Link do Google Maps referente à localização do cliente"
@@ -124,7 +205,7 @@ router.get('/', authenticator, authorization("Gestor", "Colaborador"), ClienteCo
  *       403:
  *         description: Não autorizado
  */
-router.post('/', authenticator, authorization("Gestor", "Colaborador"), validatorClientes, verificarErros, ClienteController.create);
+router.post('/', authenticator, authorization("Gestor"), validatorClientes, verificarErros, ClienteController.create);
 
 /**
  * @swagger
@@ -184,7 +265,7 @@ router.get('/:id', authenticator, authorization("Gestor", "Colaborador"), Client
  *       404:
  *         description: Cliente não encontrado
  */
-router.put('/:id', authenticator, authorization("Gestor", "Colaborador"), validatorClientes, verificarErros, ClienteController.put);
+router.put('/:id', authenticator, authorization("Gestor"), validatorClientes, verificarErros, ClienteController.put);
 
 /**
  * @swagger
@@ -216,7 +297,7 @@ router.put('/:id', authenticator, authorization("Gestor", "Colaborador"), valida
  *       404:
  *         description: Cliente não encontrado
  */
-router.patch('/:id', authenticator, authorization("Gestor", "Colaborador"), validatorClientes, verificarErros, ClienteController.patch);
+router.patch('/:id', authenticator, authorization("Gestor"), regrasValidacaoClientePatch, verificarErros, ClienteController.patch);
 
 /**
  * @swagger
@@ -238,6 +319,6 @@ router.patch('/:id', authenticator, authorization("Gestor", "Colaborador"), vali
  *       404:
  *         description: Cliente não encontrado
  */
-router.delete('/:id', authenticator, authorization("Gestor", "Colaborador"), ClienteController.delete);
+router.delete('/:id', authenticator, authorization("Gestor"), ClienteController.delete);
 
 export default router;

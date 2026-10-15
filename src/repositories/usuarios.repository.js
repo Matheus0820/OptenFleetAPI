@@ -1,33 +1,17 @@
 import Usuario from '../models/usuarios.model.js';
-import crypto from 'crypto';
+import { crudRepository } from './crud.repository.js';
 
-class UsuarioRepository {
-
-    static async findAll() {
-        const usuarios = await Usuario.find();
-        return usuarios;
+export default class UsuarioRepository extends crudRepository(Usuario) {
+    // senha tem select:false; só o login precisa dela.
+    static findByEmailComSenha(email) {
+        return Usuario.findOne({ email: String(email).trim().toLowerCase() }).select('+senha');
     }
 
-    static async findById(id) {
-        const usuario = await Usuario.findById(id);
-        return usuario;
-    }
+    // O service já carregou o usuário, então basta remover (sem findAndModify).
+    static async delete(id) { await Usuario.deleteOne({ _id: id }); }
 
-    static async create(usuarioData) {
-        const newUsuario = new Usuario(usuarioData);
-        await newUsuario.save();
-        return newUsuario;
-    }
-
-    static async update(usuarioData, id) {
-        const usuario = await Usuario.findByIdAndUpdate(id, usuarioData, { new: true });
-        return usuario;
-    }
-
-    static async delete(id) {
-        const usuario = await Usuario.findByIdAndDelete(id);
-        return usuario;
+    static async update(data, id) {
+        await Usuario.updateOne({ _id: id }, data, { runValidators: true });
+        return Usuario.findById(id);
     }
 }
-
-export default UsuarioRepository;

@@ -1,174 +1,75 @@
 import ColaboradorRepository from '../repositories/colaboradores.repository.js';
 import UsuarioRepository from '../repositories/usuarios.repository.js';
 import { ColaboradorDto } from '../dtos/colaboradores.dto.js';
+import { httpError, naoEncontrado } from '../utils/errors.js';
+
+const JORNADA_ESTAGIARIO_H = 6;
+const JORNADA_PADRAO_H = 8;
 
 class ColaboradorService {
-
     static async findAll() {
-        const colaboradores = await ColaboradorRepository.findAll();
-
-        return colaboradores.map(
-            colaborador => new ColaboradorDto(colaborador)
-        );
+        return (await ColaboradorRepository.findAll()).map((c) => new ColaboradorDto(c));
     }
 
     static async findById(id) {
         const colaborador = await ColaboradorRepository.findById(id);
-
-        if (!colaborador) {
-            throw Object.assign(
-                new Error('Colaborador com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
+        if (!colaborador) throw naoEncontrado('Colaborador');
         return new ColaboradorDto(colaborador);
     }
 
-    // Função interna para recalcular os dados
-    static calcularDados(colaboradorData) {
-        let horasTrabalhoPorDiaCalc = 0;
+    // Regra de negócio: jornada definida pela função; fim = início + jornada.
+    // O expediente não pode atravessar a meia-noite (as rotas são planejadas dentro de um único dia).
+    static calcularDados({ funcao, horaInicioExpediente }) {
+        const horasTrabalhoPorDia = funcao === 'Estagiário' ? JORNADA_ESTAGIARIO_H : JORNADA_PADRAO_H;
+        const horaFimExpediente = Number(horaInicioExpediente) + horasTrabalhoPorDia;
 
-        if (["Ajudante", "Técnico", "Engenheiro"].includes(colaboradorData.funcao)) {
-            horasTrabalhoPorDiaCalc = 8;
-        } else {
-            horasTrabalhoPorDiaCalc = 6;
+        if (horaFimExpediente > 24) {
+            throw httpError(422, `Início às ${horaInicioExpediente}h com jornada de ${horasTrabalhoPorDia}h ultrapassa a meia-noite. Informe um início até ${24 - horasTrabalhoPorDia}h.`);
         }
-
-        let horaFimExpedienteCalc =
-            Number(colaboradorData.horaInicioExpediente) + horasTrabalhoPorDiaCalc;
-
-        if (horaFimExpedienteCalc > 24) {
-            horaFimExpedienteCalc = horaFimExpedienteCalc % 24;
-        }
-
-        return {
-            horasTrabalhoPorDia: horasTrabalhoPorDiaCalc,
-            horaFimExpediente: horaFimExpedienteCalc
-        };
+        return { horasTrabalhoPorDia, horaFimExpediente };
     }
 
-    static async create(colaboradorData) {
-        const calculado = this.calcularDados(colaboradorData);
-        const user_id = colaboradorData.user_id;
+    static async create(dados) {
+        const calculado = this.calcularDados(dados);
 
-        // Veficando se usuário existe
-        const hasUser = await UsuarioRepository.findById(user_id);
-
-
-        if(!hasUser) {
-            throw Object.assign(
-                new Error("Usuário informado não existe."),
-                { statusCode: 404 }
-            );
-            
+        const usuario = await UsuarioRepository.findById(dados.user_id);
+        if (!usuario) throw httpError(404, 'Usuário informado não existe.');
+        if (usuario.nivelAcesso !== 'Colaborador') {
+            throw httpError(403, 'Usuário informado não possui papel de Colaborador.');
+        }
+        if (await ColaboradorRepository.findByUserId(dados.user_id)) {
+            throw httpError(409, 'Usuário informado já está cadastrado como colaborador.');
         }
 
-        // Verificando se o nível de acesso desse usuário é de Colaborador
-        if(hasUser.nivelAcesso != 'Colaborador') {
-            throw Object.assign(
-                new Error("Usuário informado não possui papel de Colaborador."),
-                {statusCode: 403}
-            );
-            
-        }
-
-        // Verificando se já existe um colaborador para o usuário informado
-        const getColaboradores = await ColaboradorRepository.findAll();
-        const hasColaborador = getColaboradores.find(colaborador => colaborador.user_id === user_id);
-
-        if(hasColaborador) {
-            throw Object.assign(
-                new Error("Usuário informado já está cadastrado como colaborador."),
-                { statusCode: 409 }
-            );
-            
-        }
-
-        const newColaboradorData = {
-            user_id: colaboradorData.user_id,
-            funcao: colaboradorData.funcao,
-            horaInicioExpediente: colaboradorData.horaInicioExpediente,
-            horaFimExpediente: calculado.horaFimExpediente,
-            horasTrabalhoPorDia: calculado.horasTrabalhoPorDia
-        };
-
-        const newColaboradorFromDb =
-            await ColaboradorRepository.create(newColaboradorData);
-
-        return new ColaboradorDto(newColaboradorFromDb);
+        const novo = await ColaboradorRepository.create({
+            user_id: dados.user_id,
+            funcao: dados.funcao,
+            horaInicioExpediente: dados.horaInicioExpediente,
+            ...calculado,
+        });
+        return new ColaboradorDto(novo);
     }
 
-    static async put(colaboradorData, id) {
-        const colaboradorSalvo = await ColaboradorRepository.findById(id);
+    static async atualizar(dados, id) {
+        const salvo = await ColaboradorRepository.findById(id);
+        if (!salvo) throw naoEncontrado('Colaborador');
 
-        if (!colaboradorSalvo) {
-            throw Object.assign(
-                new Error('Colaborador com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
-        const calculado = this.calcularDados(colaboradorData);
-
-        const updateData = {
-            funcao: colaboradorData.funcao,
-            horaInicioExpediente: colaboradorData.horaInicioExpediente,
-            horaFimExpediente: calculado.horaFimExpediente,
-            horasTrabalhoPorDia: calculado.horasTrabalhoPorDia
+        const mesclado = {
+            funcao: dados.funcao ?? salvo.funcao,
+            horaInicioExpediente: dados.horaInicioExpediente ?? salvo.horaInicioExpediente,
         };
-
-        const colaboradorUpdateDb =
-            await ColaboradorRepository.update(updateData, id);
-
-        return new ColaboradorDto(colaboradorUpdateDb);
+        const atualizado = await ColaboradorRepository.update({ ...mesclado, ...this.calcularDados(mesclado) }, id);
+        return new ColaboradorDto(atualizado);
     }
 
-    static async patch(colaboradorData, id) {
-        const colaboradorSalvo = await ColaboradorRepository.findById(id);
-
-        if (!colaboradorSalvo) {
-            throw Object.assign(
-                new Error('Colaborador com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
-        const mergedData = {
-            funcao: colaboradorData.funcao ?? colaboradorSalvo.funcao,
-            horaInicioExpediente:
-                colaboradorData.horaInicioExpediente ??
-                colaboradorSalvo.horaInicioExpediente
-        };
-
-        const calculado = this.calcularDados(mergedData);
-
-        const updateData = {
-            funcao: mergedData.funcao,
-            horaInicioExpediente: mergedData.horaInicioExpediente,
-            horaFimExpediente: calculado.horaFimExpediente,
-            horasTrabalhoPorDia: calculado.horasTrabalhoPorDia
-        };
-
-        const colaboradorUpdateDb =
-            await ColaboradorRepository.update(updateData, id);
-
-        return new ColaboradorDto(colaboradorUpdateDb);
-    }
+    static put(dados, id) { return this.atualizar(dados, id); }
+    static patch(dados, id) { return this.atualizar(dados, id); }
 
     static async delete(id) {
-        const colaboradorDelete = await ColaboradorRepository.findById(id);
-
-        if (!colaboradorDelete) {
-            throw Object.assign(
-                new Error('Colaborador com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
+        const salvo = await ColaboradorRepository.findById(id);
+        if (!salvo) throw naoEncontrado('Colaborador');
         await ColaboradorRepository.delete(id);
-
-        return new ColaboradorDto(colaboradorDelete);
+        return new ColaboradorDto(salvo);
     }
 }
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ColaboradorController from '../controllers/colaboradores.controller.js';
-import validatorColaboradores from '../validators/colaboradores.validator.js';
+import validatorColaboradores, { regrasValidacaoColaboradorPatch } from '../validators/colaboradores.validator.js';
 import verificarErros from '../middlewares/validator.middleware.js';
 import { authenticator } from '../middlewares/auth.middleware.js';
 import { authorization } from '../middlewares/authorization.middleware.js';
@@ -213,7 +213,7 @@ router.put('/:id', authenticator, authorization("Gestor"), validatorColaboradore
  *       200:
  *         description: Colaborador atualizado parcialmente com sucesso
  */
-router.patch('/:id', authenticator, authorization("Gestor"), validatorColaboradores, verificarErros, ColaboradorController.patch);
+router.patch('/:id', authenticator, authorization("Gestor"), regrasValidacaoColaboradorPatch, verificarErros, ColaboradorController.patch);
 
 /**
  * @swagger

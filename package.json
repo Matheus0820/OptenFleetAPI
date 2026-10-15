@@ -1,11 +1,14 @@
 {
-  "name": "projeto-unidade-2-desenvolvimento-web-beckend",
+  "name": "opten-fleet-api",
   "version": "1.0.0",
-  "description": "Criar uma API de CRUD com todas as habilidades e ferramentas aprendidas e prospectadas na segunda unidade da disciplina de **Desenvolvimento WEB Beckend**",
-  "main": "server.js",
+  "description": "API Opt.en Fleet - roteirização sustentável para empresas do setor fotovoltaico",
+  "main": "src/server.js",
   "scripts": {
     "start": "node ./src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test \"tests/**/*.test.js\"",
+    "dev": "node --watch ./src/server.js",
+    "test:e2e": "node tests/e2e.mjs",
+    "seed": "node scripts/seed.mjs"
   },
   "type": "module",
   "keywords": [],
@@ -13,17 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "crypto": "^1.0.1",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "express-validator": "^7.3.2",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
-    "lowdb": "^7.0.1",
-    "mongodb": "^7.2.0",
     "mongoose": "^9.6.3",
-    "pug": "^3.0.4",
     "swagger-jsdoc": "^6.3.0",
-    "swagger-ui-express": "^5.0.1",
-    "uuid": "^14.0.0"
+    "swagger-ui-express": "^5.0.1"
   }
 }

@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import UsuarioController from '../controllers/usuarios.controller.js';
-import validatorUsuarios from '../validators/usuarios.validator.js';
-import validarAtualizacaoUsuario from '../validators/usuarios.update.validator.js';
+import validatorUsuarios, { regrasValidacaoUsuarioPatch } from '../validators/usuarios.validator.js';
 import verificarErros from '../middlewares/validator.middleware.js';
-import { authenticator } from '../middlewares/auth.middleware.js';
+import { authenticator, optionalAuthenticator } from '../middlewares/auth.middleware.js';
 import { authorization } from '../middlewares/authorization.middleware.js';
 
 const router = Router();
@@ -139,7 +138,7 @@ router.get('/', authenticator, authorization("Gestor"), UsuarioController.findAl
  *       400:
  *         description: Erro de validação
  */
-router.post('/', validatorUsuarios, verificarErros, UsuarioController.create);
+router.post('/', optionalAuthenticator, validatorUsuarios, verificarErros, UsuarioController.create);
 
 /**
  * @swagger
@@ -203,7 +202,7 @@ router.put(
   '/:id',
   authenticator,
   authorization("Gestor"),
-  validarAtualizacaoUsuario,
+  regrasValidacaoUsuarioPatch,
   verificarErros,
   UsuarioController.put
 );
@@ -244,7 +243,7 @@ router.patch(
   '/:id',
   authenticator,
   authorization("Gestor"),
-  validarAtualizacaoUsuario,
+  regrasValidacaoUsuarioPatch,
   verificarErros,
   UsuarioController.patch
 );

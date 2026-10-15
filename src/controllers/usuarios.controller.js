@@ -24,7 +24,7 @@ class UsuarioController {
     static async create(req, res, next) {
         try {
             const usuarioData = req.body;
-            const newUsuarioDto = await UsuarioService.create(usuarioData);
+            const newUsuarioDto = await UsuarioService.create(usuarioData, req.usuario);
             res.status(201).json(newUsuarioDto);
         } catch (error) {
             next(error);
@@ -36,7 +36,7 @@ class UsuarioController {
             const usuarioData = req.body;
             const id = req.params.id;
 
-            const putUsuarioDto = await UsuarioService.put(usuarioData, id);
+            const putUsuarioDto = await UsuarioService.put(usuarioData, id, req.usuario);
             res.status(200).json(putUsuarioDto);
         } catch (error) {
             next(error);
@@ -48,7 +48,7 @@ class UsuarioController {
             const usuarioData = req.body;
             const id = req.params.id;
 
-            const patchUsuarioDto = await UsuarioService.patch(usuarioData, id);
+            const patchUsuarioDto = await UsuarioService.patch(usuarioData, id, req.usuario);
             res.status(200).json(patchUsuarioDto);
         } catch (error) {
             next(error);
@@ -59,7 +59,7 @@ class UsuarioController {
         try {
             const id = req.params.id;
 
-            const deleteUsuarioDto = await UsuarioService.delete(id);
+            const deleteUsuarioDto = await UsuarioService.delete(id, req.usuario);
             res.status(200).json(deleteUsuarioDto);
         } catch (error) {
             next(error);

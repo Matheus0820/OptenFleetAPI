@@ -1,0 +1,29 @@
+# Sobe o app (API + front + solver) e um MongoDB local.
+#   cp .env.example .env   # defina JWT_SECRET
+#   docker compose up --build
+# Para usar MongoDB Atlas: defina MONGODB_URL no .env e rode `docker compose up --build app --no-deps`.
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      MONGODB_URL: ${MONGODB_URL:-mongodb://mongo:27017}
+      OSRM_URL: ${OSRM_URL-https://router.project-osrm.org}
+      SOLVER_TIME_LIMIT: ${SOLVER_TIME_LIMIT:-10}
+      DEPOT_NOME: ${DEPOT_NOME:-Depósito Opt.en}
+      DEPOT_LAT: ${DEPOT_LAT:--5.843444}
+      DEPOT_LNG: ${DEPOT_LNG:--35.199407}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:7
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
