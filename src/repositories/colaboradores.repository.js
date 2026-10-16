@@ -1,32 +1,18 @@
 import Colaborador from '../models/colaboradores.model.js';
-import crypto from 'crypto';
+import { crudRepository } from './crud.repository.js';
 
-class ColaboradorRepository {
-    static async findAll() {
-        const colaboradores = await Colaborador.find();
-        return colaboradores;
+const POPULATE = { path: 'user_id', select: 'nome email' };
+
+export default class ColaboradorRepository extends crudRepository(Colaborador) {
+    static findAll() { return Colaborador.find().populate(POPULATE); }
+    static findById(id) { return Colaborador.findById(id).populate(POPULATE); }
+    static findByUserId(userId) { return Colaborador.findOne({ user_id: userId }); }
+    static deleteByUserId(userId) { return Colaborador.deleteOne({ user_id: userId }); }
+    static async create(data) {
+        const novo = await new Colaborador(data).save();
+        return novo.populate(POPULATE);
     }
-
-    static async findById(id) {
-        const colaborador = await Colaborador.findById(id);
-        return colaborador;
-    }
-
-    static async create(colaboradorData) {
-        const newColaborador = new Colaborador(colaboradorData);
-        await newColaborador.save();
-        return newColaborador;
-    }
-
-    static async update(colaboradorData, id) {
-        const colaborador = await Colaborador.findByIdAndUpdate(id, colaboradorData, { new: true });
-        return colaborador;
-    }
-
-    static async delete(id) {
-        const colaborador = await Colaborador.findByIdAndDelete(id);
-        return colaborador;
+    static update(data, id) {
+        return Colaborador.findByIdAndUpdate(id, data, { new: true, runValidators: true }).populate(POPULATE);
     }
 }
-
-export default ColaboradorRepository;

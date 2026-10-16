@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import FrotaController from '../controllers/frota.controller.js';
-import validatorFrota from '../validators/frota.entidades.js';
+import validatorFrota, { regrasValidacaoFrotaPatch } from '../validators/frota.entidades.js';
 import verificarErros from '../middlewares/validator.middleware.js';
 import { authenticator } from '../middlewares/auth.middleware.js';
 import { authorization } from '../middlewares/authorization.middleware.js';
@@ -23,6 +23,9 @@ const router = Router();
  *       description: Representa um veículo cadastrado na frota da empresa
  *       required:
  *         - marca
+ *         - modelo
+ *         - categoria
+ *         - capacidadeCarga
  *         - anoFabricacao
  *         - placa
  *         - capacidadeMaximaTanque
@@ -37,6 +40,19 @@ const router = Router();
  *           type: string
  *           description: Marca do veículo
  *           example: Volkswagen
+ *         modelo:
+ *           type: string
+ *           description: Modelo do veículo
+ *           example: Hilux
+ *         categoria:
+ *           type: string
+ *           enum: [Insumos, Pessoas]
+ *           description: Insumos (itens/volumes) ou Pessoas (passageiros)
+ *           example: Insumos
+ *         capacidadeCarga:
+ *           type: integer
+ *           description: Capacidade de carga (itens ou pessoas, conforme a categoria)
+ *           example: 12
  *         anoFabricacao:
  *           type: number
  *           description: Ano de fabricação do veículo
@@ -59,6 +75,9 @@ const router = Router();
  *       description: Estrutura utilizada para criação de um veículo
  *       required:
  *         - marca
+ *         - modelo
+ *         - categoria
+ *         - capacidadeCarga
  *         - anoFabricacao
  *         - placa
  *         - capacidadeMaximaTanque
@@ -67,6 +86,19 @@ const router = Router();
  *         marca:
  *           type: string
  *           example: Volkswagen
+ *         modelo:
+ *           type: string
+ *           description: Modelo do veículo
+ *           example: Hilux
+ *         categoria:
+ *           type: string
+ *           enum: [Insumos, Pessoas]
+ *           description: Insumos (itens/volumes) ou Pessoas (passageiros)
+ *           example: Insumos
+ *         capacidadeCarga:
+ *           type: integer
+ *           description: Capacidade de carga (itens ou pessoas, conforme a categoria)
+ *           example: 12
  *         anoFabricacao:
  *           type: number
  *           example: 2021
@@ -87,6 +119,19 @@ const router = Router();
  *         marca:
  *           type: string
  *           example: Fiat
+ *         modelo:
+ *           type: string
+ *           description: Modelo do veículo
+ *           example: Hilux
+ *         categoria:
+ *           type: string
+ *           enum: [Insumos, Pessoas]
+ *           description: Insumos (itens/volumes) ou Pessoas (passageiros)
+ *           example: Insumos
+ *         capacidadeCarga:
+ *           type: integer
+ *           description: Capacidade de carga (itens ou pessoas, conforme a categoria)
+ *           example: 12
  *         anoFabricacao:
  *           type: number
  *           example: 2023
@@ -118,7 +163,7 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Frota'
  */
-router.get('/', authenticator, authorization("Gestor", "Colaborador"), FrotaController.findAll);
+router.get('/', authenticator, authorization("Gestor"), FrotaController.findAll);
 
 /**
  * @swagger
@@ -138,7 +183,7 @@ router.get('/', authenticator, authorization("Gestor", "Colaborador"), FrotaCont
  *       201:
  *         description: Veículo criado com sucesso
  */
-router.post('/', authenticator, authorization("Gestor", "Colaborador"), validatorFrota, verificarErros, FrotaController.create);
+router.post('/', authenticator, authorization("Gestor"), validatorFrota, verificarErros, FrotaController.create);
 
 /**
  * @swagger
@@ -164,7 +209,7 @@ router.post('/', authenticator, authorization("Gestor", "Colaborador"), validato
  *       404:
  *         description: Veículo não encontrado
  */
-router.get('/:id', authenticator, authorization("Gestor", "Colaborador"), FrotaController.findById);
+router.get('/:id', authenticator, authorization("Gestor"), FrotaController.findById);
 
 /**
  * @swagger
@@ -190,7 +235,7 @@ router.get('/:id', authenticator, authorization("Gestor", "Colaborador"), FrotaC
  *       200:
  *         description: Veículo atualizado com sucesso
  */
-router.put('/:id', authenticator, authorization("Gestor", "Colaborador"), validatorFrota, verificarErros, FrotaController.put);
+router.put('/:id', authenticator, authorization("Gestor"), validatorFrota, verificarErros, FrotaController.put);
 
 /**
  * @swagger
@@ -216,7 +261,7 @@ router.put('/:id', authenticator, authorization("Gestor", "Colaborador"), valida
  *       200:
  *         description: Veículo atualizado com sucesso
  */
-router.patch('/:id', authenticator, authorization("Gestor", "Colaborador"), validatorFrota, verificarErros, FrotaController.patch);
+router.patch('/:id', authenticator, authorization("Gestor"), regrasValidacaoFrotaPatch, verificarErros, FrotaController.patch);
 
 /**
  * @swagger
@@ -236,6 +281,6 @@ router.patch('/:id', authenticator, authorization("Gestor", "Colaborador"), vali
  *       200:
  *         description: Veículo removido com sucesso
  */
-router.delete('/:id', authenticator, authorization("Gestor", "Colaborador"), FrotaController.delete);
+router.delete('/:id', authenticator, authorization("Gestor"), FrotaController.delete);
 
 export default router;

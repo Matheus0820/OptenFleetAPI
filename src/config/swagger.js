@@ -5,7 +5,7 @@ const options = {
         openapi: '3.0.0',
         info: {
             title: 'Opt.en Fleet API',
-            version: '1.2.0',
+            version: '2.0.0',
             description: 'API de gerenciamento de Rotas de instalação e manutenção'
         },
 
@@ -25,6 +25,14 @@ const options = {
             {
                 name: 'Frota',
                 description: 'Operações relacionadas a frota'
+            },
+            {
+                name: 'Rotas',
+                description: 'Roteirização otimizada (VRPTW + CVRP) por horizonte diário, semanal ou mensal'
+            },
+            {
+                name: 'Painel',
+                description: 'Dashboard e relatórios de emissões e equipe'
             },
             {
                 name: 'Usuários',

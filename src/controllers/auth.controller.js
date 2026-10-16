@@ -1,49 +1,34 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import 'dotenv/config';
-import UsuarioService from '../services/usuarios.service.js';
+import { env } from '../config/env.js';
+import UsuarioRepository from '../repositories/usuarios.repository.js';
+import { UsuarioDto } from '../dtos/usuarios.dto.js';
+import { httpError } from '../utils/errors.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
+// Hash fictício para gastar o mesmo tempo quando o e-mail não existe (evita enumeração por timing).
+const HASH_FALSO = bcrypt.hashSync('opten-fleet-timing', 10);
 
 class AuthController {
     static async login(req, res, next) {
         try {
-            const dataLogin = req.body
-            const usersDto = await UsuarioService.findAll();
-
-            const userLogin = usersDto.find(user => user.email === dataLogin.email)
-
-            if(!userLogin) {
-                throw Object.assign(
-                    new Error('Credênciais Inválidas'),
-                    { statusCode: 401 }
-                );
+            const { email, senha } = req.body ?? {};
+            if (typeof email !== 'string' || typeof senha !== 'string') {
+                throw httpError(400, 'Informe email e senha.');
             }
 
-            const passValidate = await bcrypt.compare(dataLogin.senha, userLogin.senha);
+            const usuario = await UsuarioRepository.findByEmailComSenha(email);
+            const senhaOk = await bcrypt.compare(senha, usuario?.senha ?? HASH_FALSO);
+            if (!usuario || !senhaOk) throw httpError(401, 'Credenciais inválidas');
 
-            if(!passValidate) {
-                throw Object.assign(
-                    new Error('Credênciais Inválidas'),
-                    { statusCode: 401 }
-                );
-            }
+            const payload = { id: usuario.id, login: usuario.email, nome: usuario.nome, nivelAcesso: usuario.nivelAcesso };
+            const token = jwt.sign(payload, env.jwtSecret, { expiresIn: '1h' });
 
-            const payload = {
-                id: userLogin.id,
-                login: userLogin.email,
-                nivelAcesso: userLogin.nivelAcesso
-            }
-
-            // Criando token
-            const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "1h"});
-            
-            return res.status(200).json({
-                message: "Login realizando com sucesso",
-                token_user: token
+            res.status(200).json({
+                message: 'Login realizado com sucesso',
+                token_user: token,
+                usuario: new UsuarioDto(usuario),
             });
-
-        } catch(error) {
+        } catch (error) {
             next(error);
         }
     }

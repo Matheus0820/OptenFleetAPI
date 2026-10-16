@@ -1,101 +1,77 @@
+import bcrypt from 'bcrypt';
 import UsuarioRepository from '../repositories/usuarios.repository.js';
 import ColaboradorRepository from '../repositories/colaboradores.repository.js';
 import { UsuarioDto } from '../dtos/usuarios.dto.js';
-import bcrypt from 'bcrypt';
+import { httpError, naoEncontrado } from '../utils/errors.js';
+
+const hash = (senha) => bcrypt.hash(senha, 10);
 
 class UsuarioService {
-
     static async findAll() {
-        const usuarios = await UsuarioRepository.findAll();
-        return usuarios.map(usuario => new UsuarioDto(usuario));
+        return (await UsuarioRepository.findAll()).map((u) => new UsuarioDto(u));
     }
 
     static async findById(id) {
         const usuario = await UsuarioRepository.findById(id);
-
-        if (!usuario) {
-            throw Object.assign(
-                new Error('Usuário com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
+        if (!usuario) throw naoEncontrado('Usuário');
         return new UsuarioDto(usuario);
     }
 
-    static async create(usuarioData) {
-        const saltRounds = 10;
-        const senhaHash = await bcrypt.hash(usuarioData.senha, saltRounds)
+    // Cadastro público (sem token) nunca cria Gestor. Exceção: o primeiro usuário do sistema
+    // vira Gestor (bootstrap); depois, só um Gestor autenticado cria outro Gestor.
+    static async create(dados, solicitante) {
+        const primeiro = (await UsuarioRepository.count()) === 0;
+        const ehGestor = solicitante?.nivelAcesso === 'Gestor';
+        const nivelAcesso = primeiro ? 'Gestor' : ehGestor ? (dados.nivelAcesso ?? 'Colaborador') : 'Colaborador';
 
-        usuarioData.senha = senhaHash;
-
-        const newUsuarioFromDb = await UsuarioRepository.create(usuarioData);
-        return new UsuarioDto(newUsuarioFromDb);
+        const novo = await UsuarioRepository.create({
+            nome: dados.nome,
+            email: dados.email,
+            nivelAcesso,
+            senha: await hash(dados.senha),
+        });
+        return new UsuarioDto(novo);
     }
 
-    static async put(usuarioData, id) {
-        const usuarioSalvo = await UsuarioRepository.findById(id);
+    static async atualizar(dados, id, solicitante) {
+        const salvo = await UsuarioRepository.findById(id);
+        if (!salvo) throw naoEncontrado('Usuário');
 
-        if (!usuarioSalvo) {
-            throw Object.assign(
-                new Error('Usuário com ID informado não existe.'),
-                { statusCode: 404 }
-            );
+        const novoNivel = dados.nivelAcesso ?? salvo.nivelAcesso;
+        if (salvo.nivelAcesso === 'Gestor' && novoNivel !== 'Gestor') {
+            await this.garantirOutroGestor(id);
         }
 
-        const usuarioUpdateDb = await UsuarioRepository.update({
-            nome: usuarioData.nome,
-            email: usuarioData.email,
-            nivelAcesso: usuarioData.nivelAcesso
-        }, id);
+        const update = { nome: dados.nome ?? salvo.nome, email: dados.email ?? salvo.email, nivelAcesso: novoNivel };
+        if (dados.senha) update.senha = await hash(dados.senha);
 
-        return new UsuarioDto(usuarioUpdateDb);
+        const atualizado = await UsuarioRepository.update(update, id);
+
+        // Só quem tem nível Colaborador pode ter cadastro de colaborador.
+        if (novoNivel !== 'Colaborador') await ColaboradorRepository.deleteByUserId(id);
+
+        return new UsuarioDto(atualizado);
     }
 
-    static async patch(usuarioData, id) {
-        const usuarioSalvo = await UsuarioRepository.findById(id);
+    static put(dados, id, solicitante) { return this.atualizar(dados, id, solicitante); }
+    static patch(dados, id, solicitante) { return this.atualizar(dados, id, solicitante); }
 
-        if (!usuarioSalvo) {
-            throw Object.assign(
-                new Error('Usuário com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
+    static async delete(id, solicitante) {
+        const salvo = await UsuarioRepository.findById(id);
+        if (!salvo) throw naoEncontrado('Usuário');
 
-        const dadosAtualizados = {
-            nome: usuarioData.nome ?? usuarioSalvo.nome,
-            email: usuarioData.email ?? usuarioSalvo.email,
-            nivelAcesso: usuarioData.nivelAcesso ?? usuarioSalvo.nivelAcesso
-        };
+        if (solicitante?.id === id) throw httpError(409, 'Você não pode remover o próprio usuário.');
+        if (salvo.nivelAcesso === 'Gestor') await this.garantirOutroGestor(id);
 
-        const usuarioUpdateDb = await UsuarioRepository.update(dadosAtualizados, id);
-
-        return new UsuarioDto(usuarioUpdateDb);
+        await ColaboradorRepository.deleteByUserId(id);
+        await UsuarioRepository.delete(id);
+        return new UsuarioDto(salvo);
     }
 
-    static async delete(id) {
-        const usuarioSalvo = await UsuarioRepository.findById(id);
-
-        if (!usuarioSalvo) {
-            throw Object.assign(
-                new Error('Usuário com ID informado não existe.'),
-                { statusCode: 404 }
-            );
-        }
-
-        // Verificar se o usuário tem acesso de colaborador e se é cadastrado como colaborador
-        if(usuarioSalvo.nivelAcesso == 'Colaborador') {
-            const getColaboradores = await ColaboradorRepository.findAll();
-            const hasColaborador = getColaboradores.find(colaborador => colaborador.user_id === usuarioSalvo.id);
-
-            if(hasColaborador) {
-                ColaboradorRepository.delete(hasColaborador.id);
-            }
-        }
-
-        const usuarioRemovido = await UsuarioRepository.delete(id);
-
-        return new UsuarioDto(usuarioRemovido);
+    // O sistema não pode ficar sem nenhum Gestor.
+    static async garantirOutroGestor(idExcluido) {
+        const outros = await UsuarioRepository.count({ nivelAcesso: 'Gestor', _id: { $ne: idExcluido } });
+        if (outros === 0) throw httpError(409, 'Não é possível remover ou rebaixar o último Gestor do sistema.');
     }
 }
 
