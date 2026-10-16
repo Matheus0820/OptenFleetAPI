@@ -33,7 +33,7 @@ const h = (min: number) => `${Math.floor(min / 60)}h${String(min % 60).padStart(
               <td class="px-8 py-5 text-gray-500 dark:text-gray-400">{{ r.resumo.distanciaKm | number: '1.0-1' }} km</td>
               <td class="px-8 py-5 font-black text-emerald-600 dark:text-emerald-400">{{ r.resumo.co2Kg | number: '1.0-1' }} kg</td>
               <td class="px-8 py-5 text-right">
-                @if (auth.ehGestor()) { <button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + r.nome" (click)="remover(r, $event)">🗑</button> }
+                @if (auth.ehGestor()) { <button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + r.nome" (click)="remover(r, $event)"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg></button> }
               </td>
             </tr>
           } @empty { <tr><td colspan="6" class="px-8 py-8 text-center text-gray-400">Nenhuma rota gerada ainda.</td></tr> }
@@ -45,7 +45,7 @@ const h = (min: number) => `${Math.floor(min / 60)}h${String(min % 60).padStart(
       <section class="animate-fadeIn mt-8 space-y-6" aria-label="Detalhe da rota">
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-bold text-gray-800 dark:text-white">{{ r.nome }} <span class="badge ml-2">{{ r.horizonte }}</span></h3>
-          <button class="text-xs font-bold text-gray-400 hover:text-gray-600" type="button" (click)="detalhe.set(null)">Fechar ✕</button>
+          <button class="text-xs font-bold text-gray-400 hover:text-gray-600" type="button" (click)="detalhe.set(null)">Fechar <svg class="ml-1 inline h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
         </div>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-5">
           <div class="card p-5"><p class="label">Distância</p><p class="text-2xl font-black dark:text-white">{{ r.resumo.distanciaKm | number: '1.0-1' }} km</p></div>

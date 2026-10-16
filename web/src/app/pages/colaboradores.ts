@@ -22,7 +22,7 @@ const pad = (h: number) => String(h).padStart(2, '0') + ':00';
         <div class="card rounded-[32px] p-6">
           <div class="mb-4 flex items-start justify-between">
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-xl font-black text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">{{ (c.nome || '?').charAt(0) }}</div>
-            @if (auth.ehGestor()) { <button class="text-gray-300 transition-colors hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + c.nome" (click)="remover(c)">🗑</button> }
+            @if (auth.ehGestor()) { <button class="text-gray-300 transition-colors hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + c.nome" (click)="remover(c)"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg></button> }
           </div>
           <h3 class="text-lg font-black leading-tight text-gray-800 dark:text-white">{{ c.nome }}</h3>
           <span class="text-[10px] font-black uppercase tracking-widest text-emerald-500">{{ c.funcao }}</span>
@@ -41,7 +41,7 @@ const pad = (h: number) => String(h).padStart(2, '0') + ':00';
             <label class="label" for="usr">Usuário (nível Colaborador)</label>
             <select id="usr" class="input" name="usr" [(ngModel)]="f.user_id">
               @for (u of disponiveis(); track u.id) { <option [value]="u.id">{{ u.nome }} — {{ u.email }}</option> }
-              <option value="">➕ Criar novo usuário…</option>
+              <option value="">Criar novo usuário…</option>
             </select>
           </div>
           @if (!f.user_id) {

@@ -29,7 +29,7 @@ const vazio = () => ({ nome: '', tipoServico: 'Instalação', urlMaps: '', latit
               <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ c.tempoServicoMin }} min · demanda {{ c.demanda }}@if (c.prazoDias) { · prazo {{ c.prazoDias }}d }</td>
               <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ c.janelaInicio }}h–{{ c.janelaFim }}h</td>
               <td class="px-6 py-4"><a [href]="c.urlMaps" target="_blank" rel="noopener noreferrer" class="text-xs font-bold uppercase tracking-tighter text-blue-500 hover:underline dark:text-blue-400">Google Maps ↗</a></td>
-              @if (auth.ehGestor()) { <td class="px-6 py-4 text-center"><button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + c.nome" (click)="remover(c)">🗑</button></td> }
+              @if (auth.ehGestor()) { <td class="px-6 py-4 text-center"><button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + c.nome" (click)="remover(c)"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg></button></td> }
             </tr>
           } @empty { <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Nenhum cliente cadastrado.</td></tr> }
         </tbody>

@@ -29,7 +29,7 @@ const vazio = () => ({ marca: '', modelo: '', categoria: 'Insumos', anoFabricaca
               <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ v.capacidadeCarga }} {{ v.categoria === 'Pessoas' ? 'pessoas' : 'itens' }}</td>
               <td class="px-6 py-4 text-gray-500 dark:text-gray-400">{{ v.autonomiaKm | number: '1.0-0' }} km</td>
               <td class="px-6 py-4 font-black text-emerald-600 dark:text-emerald-400">{{ v.emissaoCo2KgPorKm | number: '1.2-3' }} kg</td>
-              <td class="px-6 py-4 text-center"><button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + v.placa" (click)="remover(v)">🗑</button></td>
+              <td class="px-6 py-4 text-center"><button class="p-2 text-red-300 hover:text-red-500" type="button" [attr.aria-label]="'Remover ' + v.placa" (click)="remover(v)"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m4 4v6m6-6v6"/></svg></button></td>
             </tr>
           } @empty { <tr><td colspan="6" class="px-6 py-8 text-center text-gray-400">Nenhum veículo cadastrado.</td></tr> }
         </tbody>

@@ -8,7 +8,7 @@ import { Component, input, output } from '@angular/core';
            role="dialog" aria-modal="true" [attr.aria-label]="titulo()" (click)="$event.stopPropagation()">
         <div class="mb-6 flex items-center justify-between">
           <h3 class="text-lg font-bold text-gray-800 dark:text-white">{{ titulo() }}</h3>
-          <button type="button" class="text-gray-400 hover:text-gray-600" aria-label="Fechar" (click)="fechar.emit()">✕</button>
+          <button type="button" class="text-gray-400 hover:text-gray-600" aria-label="Fechar" (click)="fechar.emit()"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
         </div>
         <ng-content />
       </div>
