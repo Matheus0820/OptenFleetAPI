@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard, gestorGuard } from './core/auth';
 
 export const routes: Routes = [
+  { path: '', pathMatch: 'full', loadComponent: () => import('./pages/landing').then((m) => m.Landing) },
   { path: 'login', loadComponent: () => import('./pages/login').then((m) => m.Login) },
   {
     path: '',

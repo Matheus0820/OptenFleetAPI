@@ -17,9 +17,7 @@ const TEMA = 'opten.tema';
              [class.translate-x-0]="menuAberto()" [class.-translate-x-full]="!menuAberto()">
         <div class="flex items-center justify-between border-b border-gray-50 p-8 dark:border-gray-800">
           <div class="flex items-center gap-3">
-            <div class="rounded-lg bg-emerald-500 p-1.5">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-            </div>
+            <img src="logo.png" alt="Opt.en Fleet" class="h-11 w-11 object-contain rounded-[11px]" />
             <span class="text-xl font-bold dark:text-white">Opt.en <span class="text-sm font-light text-emerald-500">Fleet</span></span>
           </div>
           <button type="button" class="p-1 text-gray-400 lg:hidden" aria-label="Fechar menu" (click)="menuAberto.set(false)"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"/></svg></button>
